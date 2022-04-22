@@ -1,7 +1,7 @@
 
 #include "Simulator.h"
 #include "Plotter.h"
-
+#include "motor.h"
 #include "VoltageSource.h"
 #include "Diode.h"
 #include "Resistor.h"
@@ -31,36 +31,34 @@
 
 int main()
 {
-	const double h = 1e-6;
-	const double tmax = 5e-3;
-	const double Va = 10;
-	const double f = 1000;
-	const double R = 10;
-	const double C = 1e-3;
+	const double h = 1e-2;
+	const double tmax = 5;
+	const double R = 1; // 0.1 N.m.s
+	// 10 mH for inductor 
+	
 
 	Plotter plotter("Project", 1000, 600);
-	plotter.SetLabels("vin (V)", "iR (A)", "vout (V)");
+	plotter.SetLabels("vin (V)", "speed");
 
 	Simulator simulator(2, 0);
 
-	VoltageSource V1(1, 0, 0, Va, f);
-	Diode D1(1, 2);
-	Resistor R1(2, 0, R);
-	Capacitor C1(2, 0, C);
+	VoltageSource V1(1, 0, 10);
+	Motor M1(1, 0, 2,0.5,10e-3,0.1,0.005,0.1,0.1);
+	Resistor R1 (2, 0, R);
 
 	simulator.AddDevice(V1);
-	simulator.AddDevice(D1);
 	simulator.AddDevice(R1);
-	simulator.AddDevice(C1);
+	simulator.AddDevice(M1);
 
 	simulator.Init(h, tmax);
 
 	while (simulator.IsRunning())
 	{
-		plotter.AddRow(simulator.GetTime(), V1.GetVoltage(),
-			R1.GetCurrent(), C1.GetVoltage());
+		plotter.AddRow(simulator.GetTime(), M1.GetShaftSpeed());
+			
+		M1.GetShaftSpeed();
 		
-		simulator.Step();
+		
 	}
 
 	plotter.Plot();
