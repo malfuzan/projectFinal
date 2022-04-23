@@ -35,11 +35,7 @@ public:
     int int1;
     int int2;
     int int3;
-    int int4;
-    int int5;
-    int int6;
-    int int7;
-    
+  
 
 
 };
@@ -59,14 +55,11 @@ Motor::Motor(int positive, int negative, int shaft, double Ra, double La, double
 void Motor::Init()
 {
        
-        int int0 = GetNextNode();
-        int int1 = GetNextNode();
-        int int2 = GetNextNode();
-        int int3 = GetNextNode();
-        int int4 = GetNextNode();
-        int int5 = GetNextNode();
-        int int6 = GetNextNode();
-        int int7 = GetNextNode();
+         int0 = GetNextNode();
+         int1 = GetNextNode();
+         int2 = GetNextNode();
+         int3 = GetNextNode();
+       
 
 
 
@@ -92,19 +85,19 @@ void Motor::Step(double t, double h)
     // Voltage Controlled Voltage Source
     AddJacobian(int1, int3, 1);
     AddJacobian(negative, int3, -1);
-    AddJacobian(int3, int4, -Ke);
-    AddJacobian(int3, int5, Ke);
+    AddJacobian(int3, int1, -Ke);
+    AddJacobian(int3, negative, Ke);
     AddJacobian(int3, int1, 1);
     AddJacobian(int3, negative, -1);
 
 
     // Current Controlled Current Source:
-    AddJacobian(int6, int3, 1);
-    AddJacobian(int7, int3, -1);
+    AddJacobian(int1, int3, 1);
+    AddJacobian(negative, int3, -1);
     AddJacobian(negative, int3, Kt);
     AddJacobian(shaft, int3, -Kt);
-    AddJacobian(int3, int6, 1);
-    AddJacobian(int3, int7, -1);
+    AddJacobian(int3, int1, 1);
+    AddJacobian(int3, negative, -1);
 
 
     // Bm:
