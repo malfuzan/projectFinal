@@ -11,7 +11,7 @@ int main()
 {
 	const double h = 1e-2;
 	const double tmax = 5;
-	const double R = 10; // 0.1 N.m.s
+	const double R = 1; // 0.1 N.m.s
 	// 10 mH for inductor 
 	
 
@@ -33,7 +33,7 @@ int main()
 	{
 		plotter.AddRow(simulator.GetTime(), M1.GetShaftPower());
 			
-		
+		simulator.Step();
 		
 	}
 

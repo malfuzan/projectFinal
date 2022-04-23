@@ -33,7 +33,6 @@ public:
     double Kt;
     int int0;
     int int1;
-    int int2;
     int int3;
   
 
@@ -57,7 +56,6 @@ void Motor::Init()
        
          int0 = GetNextNode();
          int1 = GetNextNode();
-         int2 = GetNextNode();
          int3 = GetNextNode();
        
 
