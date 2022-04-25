@@ -33,11 +33,10 @@ public:
     double Kt;
     int int0;
     int int1;
+    int int2;
     int int3;
-  
-
-
 };
+
 Motor::Motor(int positive, int negative, int shaft, double Ra, double La, double Jr,
     double Br, double Ke, double Kt)
 {
@@ -55,15 +54,12 @@ void Motor::Init()
 {
        
          int0 = GetNextNode();
-         int1 = GetNextNode();
-         int3 = GetNextNode();
-       
-
-
-
-
-        
+   //      int1 = GetNextNode();
+         int2 = GetNextNode();
+     //    int3 = GetNextNode();
+               
 }
+
 void Motor::Step(double t, double h)
 {
     // Ra:
@@ -73,29 +69,27 @@ void Motor::Step(double t, double h)
     AddJacobian(int0, int0, 1 / Ra);
 
     // La:
-    AddJacobian(int0, int3, 1);
-    AddJacobian(int1, int3, -1);
-    AddJacobian(int3, int0, 1);
-    AddJacobian(int3, int1, -1);
-    AddJacobian(int3, int3, -La / h);
-    AddBEquivalent(int3, -La / h * GetState(int3));
+    AddJacobian(int0, int2, 1);
+    AddJacobian(negative, int2, -1);
+    AddJacobian(int2, int0, 1);
+    AddJacobian(int2, negative, -1);
+    AddJacobian(int2, int2, -La / h);
+    AddBEquivalent(int2, ( - La / h )* GetState(int2));
 
     // Voltage Controlled Voltage Source
-    AddJacobian(int1, int3, 1);
-    AddJacobian(negative, int3, -1);
-    AddJacobian(int3, int1, -Ke);
-    AddJacobian(int3, negative, Ke);
-    AddJacobian(int3, int1, 1);
-    AddJacobian(int3, negative, -1);
+  //  AddJacobian(int1, int3, 1);
+    //AddJacobian(negative, int3, -1);
+    //AddJacobian(int3, shaft, -Ke);
+    //AddJacobian(int3, int1, 1);
+    //AddJacobian(int3, negative, -1);
 
 
     // Current Controlled Current Source:
-    AddJacobian(int1, int3, 1);
-    AddJacobian(negative, int3, -1);
-    AddJacobian(negative, int3, Kt);
-    AddJacobian(shaft, int3, -Kt);
-    AddJacobian(int3, int1, 1);
-    AddJacobian(int3, negative, -1);
+    //AddJacobian(int1, int3, 1);
+    //AddJacobian(negative, int3, -1);
+    //AddJacobian(shaft, int3, Kt);
+    //AddJacobian(int3, int1, 1);
+    //AddJacobian(int3, negative, -1);
 
 
     // Bm:
@@ -105,17 +99,22 @@ void Motor::Step(double t, double h)
     AddJacobian(shaft, shaft, Jr / h);
     AddBEquivalent(shaft, (Jr / h) * GetState(shaft));
 
+    AddBEquivalent(int2, Ke * GetState(shaft));
+    AddBEquivalent(shaft, Kt * GetState(int2));
 
+
+
+    //sim->J.Print();
      
 }
 
 double Motor::GetArmatureVoltage()
 {
-    return GetState(positive);
+    return GetStateDifference(positive, negative);
 }
 double Motor::GetArmatureCurrent()
 {
-    return GetState(int3);
+    return GetState(int2);
 }
 double Motor::GetTerminalPower()
 {
@@ -127,7 +126,7 @@ double Motor::GetShaftSpeed()
 }
 double Motor::GetShaftTorque()
 {
-    return Kt*GetState(int3);
+    return Kt*GetState(int2);
 }
 double Motor::GetShaftPower()
 {

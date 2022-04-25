@@ -11,16 +11,17 @@ int main()
 {
 	const double h = 1e-2;
 	const double tmax = 5;
-	const double R = 1; // 0.1 N.m.s
+	const double R = 0; // 0.1 N.m.s
 	// 10 mH for inductor 
 	
 
-	Plotter plotter("Project", 1000, 600);
-	plotter.SetLabels("vin (V)", "speed");
+	Plotter plotter1("Project", 1000, 600);
+	plotter1.SetLabels("speed", "Ia");
+
 
 	Simulator simulator(2,0);
 	VoltageSource V1(1, 0, 10);
-	Motor M1(1, 0, 2,0.5,10e-3,0.1,0.005,0.1,0.1);
+	Motor M1(1, 0, 2, 0.5, 0.01, 0.1, 0.005, 0.1, 0.1);
 	Resistor R1 (2, 0, R);
 
 	simulator.AddDevice(V1);
@@ -31,13 +32,14 @@ int main()
 
 	while (simulator.IsRunning())
 	{
-		plotter.AddRow(simulator.GetTime(), M1.GetShaftPower());
-			
+		plotter1.AddRow(simulator.GetTime(), M1.GetShaftSpeed(), M1.GetArmatureCurrent());
+
 		simulator.Step();
 		
 	}
 
-	plotter.Plot();
+	plotter1.Plot();
+
 
 	return 0;
 }

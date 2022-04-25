@@ -340,6 +340,8 @@ class Simulator
     */
     void SetSignal(const int signal, const double value);
 
+    Matrix J;                     ///< System Jacobian Matrix
+
     private:
 
     /**
@@ -354,7 +356,7 @@ class Simulator
     double dt;                    ///< Current time step for the transient simulation (s) 
 
     // Linear Solver:
-    Matrix J;                     ///< System Jacobian Matrix
+    
     ColumnVector B;               ///< System B-Equivalent Vector
     ColumnVector X;               ///< System State Vector
     ColumnVector X0;              ///< System Initial State Vector
